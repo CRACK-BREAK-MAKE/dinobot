@@ -238,6 +238,11 @@ class Game:
                 continue
             self.ground_y = self.h - GROUND_PAD
             self._input()
+            if not self.claude_done and os.path.exists(SIGNAL_FILE):
+                self.claude_done = True; self.claude_flash = 90
+                try: os.remove(SIGNAL_FILE)
+                except Exception: pass
+            if self.claude_flash > 0: self.claude_flash -= 1
             if self.state == "PLAYING": self._update()
             self._render(); self.frame += 1
 
@@ -325,11 +330,6 @@ class Game:
         if new_night != self.is_night: self._apply_theme("night" if new_night else "day")
         if self.score > 0 and self.score % 100 == 0: self.milestone_flash = 20
         if self.milestone_flash > 0: self.milestone_flash -= 1
-        if not self.claude_done and os.path.exists(SIGNAL_FILE):
-            self.claude_done = True; self.claude_flash = 90
-            try: os.remove(SIGNAL_FILE)
-            except Exception: pass
-        if self.claude_flash > 0: self.claude_flash -= 1
 
     def _render(self):
         self.scr.erase()
