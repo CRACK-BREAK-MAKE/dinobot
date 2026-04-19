@@ -43,20 +43,16 @@ Why stare at a spinner when you could be jumping over cacti?
 **Option A - curl (quickest)**
 
 ```bash
-curl -sL https://github.tools.sap/I504180/dinobot/raw/main/install-dino.sh -o install-dino.sh
-bash install-dino.sh
+curl -fsSL https://raw.githubusercontent.com/CRACK-BREAK-MAKE/dinobot/main/install-dino.sh | bash
 ```
 
 **Option B - git clone**
 
 ```bash
-git clone https://github.tools.sap/I504180/dinobot.git
+git clone https://github.com/CRACK-BREAK-MAKE/dinobot.git
 cd dinobot
 bash install-dino.sh
 ```
-
-> If Option A fails with a 401, your GitHub Enterprise may require auth for raw URLs. Use Option B or pass a token:
-> `curl -sL -H "Authorization: token <YOUR_PAT>" https://github.tools.sap/I504180/dinobot/raw/main/install-dino.sh -o install-dino.sh`
 
 The installer does everything:
 
