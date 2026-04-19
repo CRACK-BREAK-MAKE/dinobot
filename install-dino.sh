@@ -366,6 +366,11 @@ class Game:
         if self.state == "MENU": self._draw_menu()
         elif self.state == "GAMEOVER": self._draw_gameover()
         elif self.state == "PAUSED": self._draw_paused()
+        if self.claude_done:
+            msg = f" {FULL} CLAUDE IS DONE! Press Q to exit {FULL} "
+            flash_on = self.claude_flash == 0 or self.claude_flash % 6 < 4
+            if flash_on:
+                self._addstr(0, 2, msg, self._cp("claude", curses.A_BOLD | curses.A_BLINK))
         self.scr.refresh()
 
     def _draw_mountains(self):
@@ -407,9 +412,6 @@ class Game:
         self._addstr(2, sx, f" SPD [{bar}]", self._cp("ground"))
         icon = " *" if self.is_night else " o"
         self._addstr(2, hx, icon, self._cp("star", curses.A_BOLD))
-        if self.claude_done and (self.claude_flash == 0 or self.claude_flash % 6 < 4):
-            msg = f" {FULL} CLAUDE IS DONE! Press Q to exit {FULL} "
-            self._addstr(0, 2, msg, self._cp("claude", curses.A_BOLD | curses.A_BLINK))
 
     def _draw_menu(self):
         cy = self.h // 2 - 6; c_title = self._cp("score", curses.A_BOLD)
