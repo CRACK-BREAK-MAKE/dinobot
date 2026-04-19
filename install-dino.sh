@@ -194,7 +194,9 @@ class Game:
         self.mtn_far = gen_mountains(300, 2, 6)
         self.mtn_near = gen_mountains(300, 1, 4)
         self.mtn_offset_far = 0.0; self.mtn_offset_near = 0.0
-        self.claude_done = False; self.claude_flash = 0
+        self.claude_done = False
+        try: os.remove(SIGNAL_FILE)
+        except Exception: pass
         curses.curs_set(0); self.scr.nodelay(True); self.scr.timeout(TICK_MS)
         self._setup_colors()
 
@@ -238,11 +240,10 @@ class Game:
                 continue
             self.ground_y = self.h - GROUND_PAD
             self._input()
-            if not self.claude_done and os.path.exists(SIGNAL_FILE):
-                self.claude_done = True; self.claude_flash = 90
+            if os.path.exists(SIGNAL_FILE):
+                self.claude_done = True
                 try: os.remove(SIGNAL_FILE)
                 except Exception: pass
-            if self.claude_flash > 0: self.claude_flash -= 1
             if self.state == "PLAYING": self._update()
             self._render(); self.frame += 1
 
@@ -368,9 +369,8 @@ class Game:
         elif self.state == "PAUSED": self._draw_paused()
         if self.claude_done:
             msg = f" {FULL} CLAUDE IS DONE! Press Q to exit {FULL} "
-            flash_on = self.claude_flash == 0 or self.claude_flash % 6 < 4
-            if flash_on:
-                self._addstr(0, 2, msg, self._cp("claude", curses.A_BOLD | curses.A_BLINK))
+            flash_attr = curses.A_BOLD | curses.A_REVERSE if self.frame % 16 < 8 else curses.A_BOLD
+            self._addstr(0, 2, msg, self._cp("claude", flash_attr))
         self.scr.refresh()
 
     def _draw_mountains(self):
@@ -501,13 +501,21 @@ if os.path.exists(path):
 else:
     os.makedirs(os.path.dirname(path), exist_ok=True); settings = {}
 hook = {"matcher": "", "hooks": [{"type": "command", "command": "touch ~/.claude/games/.claude_done"}]}
+cmd_str = "touch ~/.claude/games/.claude_done"
+# Use Stop hook (fires every time Claude finishes a response, regardless of terminal focus)
+settings.setdefault("hooks", {}).setdefault("Stop", [])
+exists_stop = any(any(h.get("command") == cmd_str for h in e.get("hooks", [])) for e in settings["hooks"]["Stop"])
+if not exists_stop:
+    settings["hooks"]["Stop"].append(hook)
+# Also keep Notification hook as a backup signal
 settings.setdefault("hooks", {}).setdefault("Notification", [])
-exists = any(any(h.get("command") == "touch ~/.claude/games/.claude_done" for h in e.get("hooks", [])) for e in settings["hooks"]["Notification"])
-if not exists:
+exists_notif = any(any(h.get("command") == cmd_str for h in e.get("hooks", [])) for e in settings["hooks"]["Notification"])
+if not exists_notif:
     settings["hooks"]["Notification"].append(hook)
-    with open(path, "w") as f: json.dump(settings, f, indent=2)
+# Clean up old Notification-only installs that lack the Stop hook
+with open(path, "w") as f: json.dump(settings, f, indent=2)
 HOOK_EOF
-echo -e "${GREEN}[ok]${NC} Claude Code notification hook configured"
+echo -e "${GREEN}[ok]${NC} Claude Code hooks configured (Stop + Notification)"
 
 echo ""
 echo -e "${GREEN}================================================${NC}"
