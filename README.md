@@ -38,20 +38,27 @@ Why stare at a spinner when you could be jumping over cacti?
 
 ## Getting Started
 
-### 1. Clone
+### 1. Download and install
+
+**Option A - curl (quickest)**
+
+```bash
+curl -sL https://github.tools.sap/I504180/dinobot/raw/main/install-dino.sh -o install-dino.sh
+bash install-dino.sh
+```
+
+**Option B - git clone**
 
 ```bash
 git clone https://github.tools.sap/I504180/dinobot.git
 cd dinobot
-```
-
-### 2. Install
-
-```bash
 bash install-dino.sh
 ```
 
-This single command does everything:
+> If Option A fails with a 401, your GitHub Enterprise may require auth for raw URLs. Use Option B or pass a token:
+> `curl -sL -H "Authorization: token <YOUR_PAT>" https://github.tools.sap/I504180/dinobot/raw/main/install-dino.sh -o install-dino.sh`
+
+The installer does everything:
 
 - Installs the game to `~/.claude/games/dino.py`
 - Installs a tmux launcher to `~/.claude/games/play.sh`
@@ -60,7 +67,7 @@ This single command does everything:
 
 Safe to run multiple times - it won't duplicate entries or overwrite existing config.
 
-### 3. Play
+### 2. Play
 
 Start Claude Code inside tmux:
 
@@ -77,7 +84,7 @@ Ctrl+B  then  D
 
 The game pops up as an overlay. Claude keeps working underneath.
 
-### 4. Controls
+### 3. Controls
 
 | Key | Action |
 |---|---|
@@ -86,7 +93,7 @@ The game pops up as an overlay. Claude keeps working underneath.
 | `P` | Pause |
 | `Q` | Quit (back to Claude) |
 
-### 5. When Claude finishes
+### 4. When Claude finishes
 
 The game flashes:
 
