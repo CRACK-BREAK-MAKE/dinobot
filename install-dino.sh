@@ -473,22 +473,23 @@ chmod +x "$GAMES_DIR/play.sh"
 echo -e "${GREEN}[ok]${NC} Installed play.sh"
 
 TMUX_CONF="$HOME/.tmux.conf"
-DINO_BIND='bind d display-popup -E -w 80% -h 80% -T " DINO RUN! " "python3 $HOME/.claude/games/dino.py"'
+DINO_BIND='bind g display-popup -E -w 80% -h 80% -T " DINO RUN! " "python3 $HOME/.claude/games/dino.py"'
 if [ -f "$TMUX_CONF" ]; then
     if grep -qF "claude/games/dino.py" "$TMUX_CONF"; then
         echo -e "${GREEN}[ok]${NC} tmux keybinding already exists"
     else
         echo "" >> "$TMUX_CONF"
-        echo "# Dino Run - Ctrl+B then D" >> "$TMUX_CONF"
+        echo "# Dino Run - Ctrl+B then G" >> "$TMUX_CONF"
         echo "$DINO_BIND" >> "$TMUX_CONF"
         echo -e "${GREEN}[ok]${NC} tmux keybinding added"
     fi
 else
-    echo "# Dino Run - Ctrl+B then D" > "$TMUX_CONF"
+    echo "# Dino Run - Ctrl+B then G" > "$TMUX_CONF"
     echo "$DINO_BIND" >> "$TMUX_CONF"
     echo -e "${GREEN}[ok]${NC} tmux keybinding created"
 fi
 [ -n "$TMUX" ] && tmux source-file "$TMUX_CONF" 2>/dev/null && echo -e "${GREEN}[ok]${NC} tmux config reloaded"
+[ -z "$TMUX" ] && echo -e "${YELLOW}[!!]${NC} Not inside tmux. After starting tmux, run: tmux source-file ~/.tmux.conf"
 
 python3 << 'HOOK_EOF'
 import json, os
@@ -518,7 +519,7 @@ echo -e "     ${YELLOW}tmux new -s claude${NC}"
 echo -e "     ${YELLOW}claude${NC}"
 echo ""
 echo -e "  2. While Claude is working, press:"
-echo -e "     ${CYAN}Ctrl+B${NC} then ${CYAN}D${NC}"
+echo -e "     ${CYAN}Ctrl+B${NC} then ${CYAN}G${NC}"
 echo ""
 echo -e "  3. Controls:"
 echo -e "     ${BOLD}SPACE/UP${NC} Jump   ${BOLD}DOWN${NC} Duck"

@@ -62,7 +62,7 @@ The installer does everything:
 
 - Installs the game to `~/.claude/games/dino.py`
 - Installs a tmux launcher to `~/.claude/games/play.sh`
-- Adds a tmux keybinding (`Ctrl+B` then `D`) to `~/.tmux.conf`
+- Adds a tmux keybinding (`Ctrl+B` then `G`) to `~/.tmux.conf`
 - Adds a Claude Code notification hook to `~/.claude/settings.json`
 
 Safe to run multiple times - it won't duplicate entries or overwrite existing config.
@@ -79,7 +79,7 @@ claude
 Give Claude a long task. While it works, press:
 
 ```
-Ctrl+B  then  D
+Ctrl+B  then  G
 ```
 
 The game pops up as an overlay. Claude keeps working underneath.
@@ -102,7 +102,7 @@ CLAUDE IS DONE! Press Q to exit
 ```
 
 Press `Q` to dismiss the game and review Claude's output.
-Press `Ctrl+B` then `D` again anytime to relaunch.
+Press `Ctrl+B` then `G` again anytime to relaunch.
 
 ## Quick test (no tmux needed)
 
@@ -120,7 +120,7 @@ python3 ~/.claude/games/dino.py
                                                          |
                                                          v
 +-----------------+     +-------------------+     +------------------+
-|  Press Ctrl+B D | --> |  tmux popup       | --> |  Game reads      |
+|  Press Ctrl+B G | --> |  tmux popup       | --> |  Game reads      |
 |  to play        |     |  opens game       |     |  signal, alerts  |
 +-----------------+     +-------------------+     +------------------+
 ```
